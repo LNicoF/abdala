@@ -1,0 +1,33 @@
+<script>
+
+/**
+ * Realiza un script que pida números hasta que se pulse “cancelar”. Si no
+ * es un número deberá indicarse con un “alert” y seguir pidiendo. Al
+ * salir con “cancelar” deberá indicarse la suma total de los números
+ * introducidos.
+ */
+
+const asNumber = ( str ) => {
+    let match = str.match( '[0-9]+' )
+    return match != null && match[ 0 ] === str ? parseInt( str ) : null
+}
+
+let res = 0 ;
+while( true ) {
+    let str = prompt( 'numero' )
+
+    if ( str === null )
+        break
+
+    let n = asNumber( str )
+    if ( n === null ) {
+        alert( 'Not a number' )
+        continue
+    }
+    console.log( n )
+    res += n
+}
+
+document.write( res )
+
+</script>

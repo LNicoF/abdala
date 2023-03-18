@@ -1,0 +1,32 @@
+<table>
+</table>
+
+<script>
+/**
+ * Realiza un script que pida número de filas y columnas y escriba una tabla.
+ * Dentro cada una de las celdas deberá escribirse un número consecutivo en
+ * orden descendente. Si, por ejemplo, la tabla es de 7x5 los números irán
+ * del 35 al 1.
+ */
+
+let td = ( str ) => {
+    let res = document.createElement( 'td' )
+    res.textContent = str
+    return res
+}
+
+let table = document.querySelector( 'table' )
+let nrows = parseInt( prompt( 'Rows: '))
+let ncols = parseInt( prompt( 'Cols: '))
+
+for ( let r = nrows ; r > 0 ; --r ) {
+    let row = document.createElement( 'tr' )
+
+    for ( let c = 0 ; c < ncols ; ++c ) {
+        row.appendChild( td( ncols * r - c ) )
+    }
+
+    table.appendChild( row )
+}
+
+</script>

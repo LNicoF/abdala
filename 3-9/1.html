@@ -1,0 +1,35 @@
+<script>
+
+/**
+ * Pide una nota (número). Muestra la calificación según la nota:
+ * - 0-3: Muy deficiente
+ * - 3-5: Insuficiente
+ * - 5-6: Suficiente
+ * - 6-7: Bien
+ * - 7-9: Notable
+ * - 9-10: Sobresaliente
+ */
+
+const isBetween = ( n, min, max ) => {
+    return n > min && n <= max ;
+}
+
+const q = ( nota ) => {
+    if ( isBetween( nota, 0, 3 ) )
+        return 'Muy deficiente'
+    if ( isBetween( nota, 3, 5 ) )
+        return 'Insuficiente'
+    if ( isBetween( nota, 5, 6 ) )
+        return 'Suficiente'
+    if ( isBetween( nota, 6, 7 ) )
+        return 'Bien'
+    if ( isBetween( nota, 7, 9 ) )
+        return 'Notable'
+    if ( isBetween( nota, 9, 10 ) )
+        return 'Sobresaliente'
+}
+
+let nota = parseInt( prompt( 'Nota: ', '' ))
+document.write( q( nota ) )
+
+</script>
