@@ -13,11 +13,11 @@ devuelve un valor boolean (true/false)
 */
 
 const esFeliz = n => {
-    if ( n < 10 )
+    if ( n < 5 )
         return n === 1
     let res = 0 ;
-    for ( let e = 10 ; e > n ; e *= 10 ) {
-        let c = ( n % e ) / 10
+    for ( let e = 1 ; e <= n ; e *= 10 ) {
+        let c = parseInt( ( n / e ) % 10 )
         res += c * c ;
     }
     return esFeliz( res )
