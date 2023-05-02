@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch index.html",
+            "type": "firefox",
+            "request": "launch",
+            "file": "${workspaceFolder}/index.html",
+            "reloadOnChange": {
+                "watch": "${workspaceFolder}/**/*",
+                "ignore": "**/node_modules/**"
+            }
+        }
+    ]
+}
+

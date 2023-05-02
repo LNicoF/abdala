@@ -1,0 +1,15 @@
+body {
+    font-family: monospace ;
+}
+
+#board {
+    border: 1px solid black ;
+    font-size: 7rem;
+}
+
+#board td {
+    text-align: center ;
+    border: 1px solid black ;
+    width: 8rem;
+    min-height: 8rem ;
+}
