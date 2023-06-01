@@ -1,74 +1,193 @@
-/**
- * # TODO
- * - Transitions
- */
+/** @param { ( value: number | null ) => void } onChanged */
+const EmptyCellSt = ( onChanged ) => {
+    // console.log( 'EmptyCellSt( %s )', onChanged )
 
-const EmptyCell = ( onChangeCb = n=>{} ) => {
-    res = {
-        clear () { return this },
-        shift () { return this },
+    let res = {
+        mark: 'empty',
 
-        fill ( value, onSuccess = ()=>{} ) {
-            onSuccess()
-            let res = FilledCell( value, onChangeCb )
-            return res
-        },
-
-        fillIfEmpty ( value, ifTrue = ()=>{} ) {
-            let res = this.fill( value )
-            ifTrue()
-            return res
-        }
-    }
-
-    onChangeCb( null )
-    return res
-}
-
-const FilledCell = ( value, onChangeCb = n=>{} ) => {
-    return {
-        value: Value( value, onChangeCb ),
-
-        clear () {
-            return EmptyCell( onChangeCb )
-        },
-
-        shift ( onto ) {
-            let res = this
-            onto.fill( this.value.value, () => { // fix
-                res = this.clear()
+        /**
+         * @param { number } value
+         * @param { () => void } onPut
+         */
+        put( value, onPut ) {
+            if ( value == null )
+                return this
+            // console.log( 'EmptyCellSt::put( %s, %s )', value, onPut )
+            res = FilledCellSt( value, ( n ) => {
+                // console.log( 'EmptyCellSt::put( %s, %s ).onChanged( %s )', value, onPut, n )
+                onChanged( n )
             } )
+            onPut()
             return res
         },
 
-        fill ( value, onSuccess = ()=>{} ) {
-            console.info( `filling ${ value.value } into ${ this.value.value }` )
-            this.value.merge( Value( value ), onSuccess )
+        /**
+         * @param { number } value
+         * @param { () => void } onFilled
+         */
+        fill( value, onFilled ) {
+            if ( value == null )
+                return this
+            // console.log( 'EmptyCellSt::fill( %s, %s )', value, onFilled )
+            let res = this.put( value, ()=>{} )
+            // console.log( res.mark )
+            onFilled()
+            return res
+        },
+
+        clear() {
+            // console.log( 'EmptyCellSt::clear()' )
             return this
         },
 
-        fillIfEmpty () { return this }
+        shift() {
+            return this
+        },
+
+        unlock() {},
+
+        /** @returns number | null */
+        getValue() {
+            return null
+        },
     }
+
+    onChanged( null )
+
+    return res
 }
 
-const Cell = ( onChangeCb = n=>{} ) => {
-    let state = EmptyCell( onChangeCb )
+/**
+ * @param { number } rValue
+ * @param { ( value: number | null ) => void } onChanged
+ */
+const FilledCellSt = ( rValue, onChanged ) => {
+    // console.log( 'FilledCellSt( %s, %s )', rValue, onChanged )
 
-    return {
-        clear () {
-            state = state.clear()
+    let value  = rValue
+    let isLocked = false
+
+    const merge = ( otherValue, onMerged ) => {
+        if ( isLocked || otherValue != value )
+            return
+        // console.log( 'FilledCellSt::_merge( %s, %s )', otherValue, onMerged )
+        value *= 2
+        isLocked = true
+        onMerged( value )
+        onChanged( value )
+    }
+
+    let res = {
+        mark: 'filled',
+
+        put( rValue, onPut, onMerged ) {
+            // console.log( 'FilledCellSt::put( %s, %s )', rValue, onPut )
+            merge( rValue, ( value ) => {
+                onPut( value )
+                onMerged( value )
+            } )
+            return this
         },
 
-        shift ( onto, onSuccess = ()=>{} ) {
-            state = state.shift( onto, onSuccess )
+        /** @param { () => void } onFilled */
+        fill() {
+            // console.log( 'FilledCellSt::fill()' )
+            return this
         },
 
-        fill ( value ) {
-            state = state.fill( value )
+        clear() {
+            // console.log( 'FilledCellSt::clear()' )
+            return EmptyCellSt( onChanged )
         },
 
-        fillIfEmpty ( value, ifTrue = ()=>{} ) {
-            state = state.fillIfEmpty( value, ifTrue )
+        shift( onto, onPut, onMerged ) {
+            const proc = isLocked ? onto.fill : onto.put
+
+            let res = this
+            proc(
+                value,
+                () => {
+                    res = this.clear()
+                    onPut()
+                },
+                onMerged
+            )
+            return res
+        },
+
+        unlock() {
+            isLocked = false
+        },
+
+        /** @returns number | null */
+        getValue() {
+            return value
         }
     }
+
+    onChanged( value )
+
+    return res
+}
+
+/** @param { ( value: number | null ) => void } onChanged */
+const Cell = ( onChanged ) => {
+    // console.log( 'Cell( %s )', onChanged )
+
+    let state = EmptyCellSt( onChanged )
+
+    /**
+     * @param { string } method
+     * @param { () => void } action
+     */
+    const logTransition = ( method, action ) => {
+        console.log( `before( %s ) Cell::%s`, state.mark, method )
+        action()
+        console.log( `after( %s ) Cell::%s`, state.mark, method )
+    }
+
+    let res = {
+        /**
+         * @param { number } value
+         * @param { () => void } onPut
+         */
+        put ( value, onPut, onMerged ) {
+            // logTransition( `put( ${ value }, ${ onPut } )`, () => {
+                state = state.put( value, onPut, onMerged )
+            // } )
+        },
+
+        /**
+         * @param { number } value
+         * @param { () => void } onFilled
+         */
+        fill( value, onFilled ) {
+            // logTransition( `fill( ${ value }, ${ onFilled } )`, () => {
+                state = state.fill( value, onFilled )
+            // } )
+        },
+
+        clear() {
+            // logTransition( 'clear()', () => {
+                state = state.clear()
+            // } )
+        },
+
+        shift( onto, onPut, onMerged ) {
+            // logTransition( `fill( ${ value }, ${ onFilled } )`, () => {
+                state = state.shift( onto, onPut, onMerged )
+            // } )
+        },
+
+        unlock() {
+            state.unlock()
+        },
+
+        /** @returns number | null */
+        getValue() {
+            return state.getValue()
+        }
+    }
+
+    return res
 }

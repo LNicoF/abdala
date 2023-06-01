@@ -1,15 +1,108 @@
+* {
+    --bg:  white ;
+    --bga: hsl( 55, 100%, 80% ) ;
+    --fg:  hsl( 0, 0%, 35% ) ;
+    --fga: white ;
+
+    --green: hsl( 100, 100%, 80% )
+}
+
+.hidden {
+    display: none ;
+}
+
 body {
     font-family: monospace ;
+    margin: 0 ;
+    padding: 0 ;
+}
+
+.content {
+    margin: 0 ;
+    padding: 0 ;
+    width: 100vw ;
+    height: 100vh ;
+    display: grid ;
+    justify-items: center ;
+    align-items: center ;
+}
+
+.log {
+    margin: 1rem ;
+    padding: 5px ;
+    position: fixed ;
+    background: rgba( 0, 0, 0, .3 ) ;
 }
 
 #board {
-    border: 1px solid black ;
-    font-size: 7rem;
+    font-size: 2rem;
+    font-weight: bolder ;
+    background: var( --bga ) ;
+    color: var( --fg );
+    padding: 5px ;
+    border-radius: 15px ;
 }
 
 #board td {
+    padding: 5px ;
+}
+
+#board div {
+    width: 6rem;
+    height: 6rem;
     text-align: center ;
-    border: 1px solid black ;
-    width: 8rem;
-    min-height: 8rem ;
+    background: white ;
+    display: grid;
+    align-items: center ;
+    border-radius: 10px ;
+}
+
+#board .n-4 div {
+    background: hsl( 20, 100%, 95% ) ;
+    color: var( --fg ) ;
+}
+
+#board .n-8 div {
+    background: hsl( 20, 100%, 85% ) ;
+    color: var( --fg ) ;
+}
+
+#board .n-16 div {
+    background: hsl( 20, 100%, 75% ) ;
+    color: var( --fga ) ;
+}
+
+#board .n-32 div {
+    background: hsl( 20, 100%, 65% ) ;
+    color: var( --fga ) ;
+}
+
+#board .n-64 div {
+    background: hsl( 20, 100%, 55% ) ;
+    color: var( --fga ) ;
+}
+
+#board .n-128 div {
+    background: hsl( 20, 100%, 45% ) ;
+    color: var( --fga ) ;
+}
+
+#board .n-256 div {
+    background: hsl( 20, 100%, 35% ) ;
+    color: var( --fga ) ;
+}
+
+#board .n-512 div {
+    background: hsl( 20, 100%, 25% ) ;
+    color: var( --fga ) ;
+}
+
+#board .n-1024 div {
+    background: hsl( 20, 100%, 15% ) ;
+    color: var( --fga ) ;
+}
+
+#board .n-2048 div {
+    background: hsl( 20, 100%, 5% ) ;
+    color: var( --fga ) ;
 }
